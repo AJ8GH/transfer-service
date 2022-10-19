@@ -1,0 +1,8 @@
+**/*.md
+**/*.idea
+coverage
+Dockerfile
+.git
+**/target
+**/test
+lombok.config

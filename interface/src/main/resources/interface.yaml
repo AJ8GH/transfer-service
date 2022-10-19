@@ -1,0 +1,180 @@
+openapi: 3.0.3
+info:
+  title: Transfer Service
+  version: 1.0.0
+  description: REST API for clients to make transfers between 2 accounts
+tags:
+  - TransferService
+  - Transfer
+  - Account
+
+paths:
+  /transfer:
+    post:
+      operationId: transfer
+      summary: Transfers funds between two accounts
+      tags:
+        - Transfer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferRequest'
+      responses:
+        200:
+          description: Transfer successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransferResponse'
+
+  /accounts:
+    post:
+      operationId: createAccount
+      summary: Creates new account
+      tags:
+        - Account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountRequest'
+      responses:
+        200:
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+    get:
+      operationId: getAccounts
+      summary: Gets all accounts
+      tags:
+        - Account
+      responses:
+        200:
+          description: Accounts retrieved
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/AccountResponse'
+
+components:
+  schemas:
+    TransferRequest:
+      type: object
+      properties:
+        sourceAccountId:
+          type: string
+          pattern: "^[a-zA-Z0-9:_./-]*$"
+          nullable: false
+        targetAccountId:
+          type: string
+          pattern: "^[a-zA-Z0-9:_./-]*$"
+          nullable: false
+        currency:
+          $ref: '#/components/schema/Currency'
+          nullable: false
+        amount:
+          type: integer
+          format: int64
+          nullable: false
+          minimum: 0
+      required:
+        - sourceAccountId
+        - targetAccountId
+        - currency
+        - amount
+
+    TransferResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: "^[a-zA-Z0-9:_./-]*$"
+          nullable: false
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          readOnly: true
+        sourceAccountId:
+          type: string
+          pattern: "^[a-zA-Z0-9:_./-]*$"
+          nullable: false
+          readOnly: true
+        targetAccountId:
+          type: string
+          pattern: "^[a-zA-Z0-9:_./-]*$"
+          nullable: false
+          readOnly: true
+        currency:
+          $ref: '#/components/schema/Currency'
+          nullable: false
+          readOnly: true
+        amount:
+          type: integer
+          format: int64
+          nullable: false
+          readOnly: true
+          minimum: 0
+      required:
+        - id
+        - createdAt
+        - sourceAccountId
+        - targetAccountId
+        - currency
+        - amount
+
+    CreateAccountRequest:
+      type: object
+      properties:
+        currency:
+          $ref: '#/components/schema/Currency'
+          nullable: false
+        initialBalance:
+          type: integer
+          format: int64
+          nullable: false
+          minimum: 0
+      required:
+        - currency
+        - initialBalance
+
+    AccountResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          pattern: "^[a-zA-Z0-9:_./-]*$"
+          nullable: false
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          nullable: false
+          readOnly: true
+        currency:
+          $ref: '#/components/schema/Currency'
+          nullable: false
+          readOnly: true
+        balance:
+          type: integer
+          format: int64
+          readOnly: true
+          nullable: false
+          minimum: 0
+      required:
+        - id
+        - createdAt
+        - currency
+        - balance
+
+    Currency:
+      type: string
+      enum:
+        - GBP
+        - USD
+        - EUR

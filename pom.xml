@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.github.aj8gh</groupId>
+  <artifactId>transfer-service</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <modules>
+    <module>api</module>
+    <module>application</module>
+    <module>interface</module>
+    <module>coverage</module>
+    <module>kafka</module>
+  </modules>
+
+  <parent>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <groupId>org.springframework.boot</groupId>
+    <relativePath/>
+    <version>2.7.3</version>
+  </parent>
+
+  <properties>
+    <!--  Config  -->
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <jacoco.haltOnFailure>true</jacoco.haltOnFailure>
+    <jacoco.target>0.8</jacoco.target>
+    <checkstyle.config.location>google_checks.xml</checkstyle.config.location>
+    <checkstyle.severity>warning</checkstyle.severity>
+    <checkstyle.fail>true</checkstyle.fail>
+    <checkstyle.console>true</checkstyle.console>
+
+    <!--  Versioning  -->
+    <byte-buddy.version>1.12.16</byte-buddy.version>
+    <h2.version>2.1.214</h2.version>
+    <jackson.databind.nullable.version>0.2.4</jackson.databind.nullable.version>
+    <jackson.datatype.version>2.13.4</jackson.datatype.version>
+    <jackson.annotations.version>2.13.3</jackson.annotations.version>
+    <jacoco.version>0.8.8</jacoco.version>
+    <javax.annotation.version>1.2</javax.annotation.version>
+    <javax.validation.version>2.0.1.Final</javax.validation.version>
+    <jsr.version>3.0.2</jsr.version>
+    <junit.jupiter.version>5.9.0</junit.jupiter.version>
+    <kafka.clients.version>3.3.1</kafka.clients.version>
+    <lombok.version>1.18.24</lombok.version>
+    <mapstruct.version>1.5.3.Final</mapstruct.version>
+    <maven.checkstyle.version>3.2.0</maven.checkstyle.version>
+    <maven.surefire.version>3.0.0-M7</maven.surefire.version>
+    <mockito.version>4.8.0</mockito.version>
+    <open.api.maven.version>6.2.0</open.api.maven.version>
+    <spring.boot.version>2.7.3</spring.boot.version>
+    <swagger.annotations.version>2.2.6</swagger.annotations.version>
+    <wiremock-jre8.version>2.34.0</wiremock-jre8.version>
+  </properties>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring.boot.version}</version>
+        </plugin>
+
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <groupId>org.apache.maven.plugins</groupId>
+          <version>${maven.surefire.version}</version>
+        </plugin>
+
+        <plugin>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <groupId>org.jacoco</groupId>
+          <version>${jacoco.version}</version>
+          <configuration>
+            <haltOnFailure>${jacoco.haltOnFailure}</haltOnFailure>
+            <rules>
+              <rule>
+                <element>BUNDLE</element>
+                <limits>
+                  <limit>
+                    <counter>INSTRUCTION</counter>
+                    <value>COVEREDRATIO</value>
+                    <minimum>${jacoco.target}</minimum>
+                  </limit>
+                </limits>
+              </rule>
+            </rules>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+              <id>default-prepare-agent</id>
+            </execution>
+            <execution>
+              <goals>
+                <goal>report</goal>
+              </goals>
+              <id>report</id>
+              <phase>test</phase>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>${maven.checkstyle.version}</version>
+          <configuration>
+            <configLocation>${checkstyle.config.location}</configLocation>
+            <violationSeverity>${checkstyle.severity}</violationSeverity>
+            <failOnViolation>${checkstyle.fail}</failOnViolation>
+            <consoleOutput>${checkstyle.console}</consoleOutput>
+          </configuration>
+          <executions>
+            <execution>
+              <id>validate</id>
+              <phase>validate</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- Project -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>application</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>interface</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.aj8gh</groupId>
+        <artifactId>kafka</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- Spring Boot -->
+      <dependency>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <version>${spring.boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+        <version>${spring.boot.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>${h2.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+
+      <!-- Util -->
+      <dependency>
+        <artifactId>lombok</artifactId>
+        <groupId>org.projectlombok</groupId>
+        <version>${lombok.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.datatype</groupId>
+        <artifactId>jackson-datatype-jsr310</artifactId>
+        <version>${jackson.datatype.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct</artifactId>
+        <version>${mapstruct.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct-processor</artifactId>
+        <version>${mapstruct.version}</version>
+      </dependency>
+
+      <!-- Code Generation -->
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${jackson.annotations.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.annotation</groupId>
+        <artifactId>javax.annotation-api</artifactId>
+        <version>${javax.annotation.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>jsr305</artifactId>
+        <version>${jsr.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openapitools</groupId>
+        <artifactId>jackson-databind-nullable</artifactId>
+        <version>${jackson.databind.nullable.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.swagger.core.v3</groupId>
+        <artifactId>swagger-annotations</artifactId>
+        <version>${swagger.annotations.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>${javax.validation.version}</version>
+      </dependency>
+
+      <!-- Kafka -->
+      <dependency>
+        <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka-clients</artifactId>
+        <version>${kafka.clients.version}</version>
+      </dependency>
+
+      <!-- Test -->
+      <dependency>
+        <artifactId>junit-jupiter</artifactId>
+        <groupId>org.junit.jupiter</groupId>
+        <version>${junit.jupiter.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <artifactId>mockito-core</artifactId>
+        <groupId>org.mockito</groupId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <artifactId>wiremock-jre8</artifactId>
+        <groupId>com.github.tomakehurst</groupId>
+        <version>${wiremock-jre8.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <version>${spring.boot.version}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+</project>
