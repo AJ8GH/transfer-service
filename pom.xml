@@ -13,7 +13,6 @@
     <module>application</module>
     <module>interface</module>
     <module>coverage</module>
-    <module>kafka</module>
   </modules>
 
   <parent>
@@ -150,11 +149,6 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>interface</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.github.aj8gh</groupId>
-        <artifactId>kafka</artifactId>
         <version>${project.version}</version>
       </dependency>
 
